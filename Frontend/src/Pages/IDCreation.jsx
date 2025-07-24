@@ -22,12 +22,13 @@ function IDCreation({ setCreations , formData , setFormData , token , user}) {
 
 
   const getBase64Image = async (url) => {
-    const response = await fetch(`${VITE_BACKEND_LINK}/proxy-image?url=${encodeURIComponent(url)}`);
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_LINK}/proxy-image?url=${encodeURIComponent(url)}`);
     const blob = await response.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
       reader.readAsDataURL(blob);
+      console.log(reader.result);
     });
   };
 

@@ -80,7 +80,6 @@ app.post('/search-college', async (req, res) => {
   }
 });
 
-// ✅ Proxy image to bypass CORS
 app.get('/proxy-image', async (req, res) => {
   const imageUrl = req.query.url;
   if (!imageUrl) {
@@ -95,7 +94,7 @@ app.get('/proxy-image', async (req, res) => {
 
     const contentType = response.headers.get('content-type');
     const buffer = await response.buffer();
-
+    console.log("Working but not doing ?")
     res.set('Content-Type', contentType);
     res.set('Access-Control-Allow-Origin', '*');
     res.send(buffer);
