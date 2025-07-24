@@ -71,7 +71,7 @@ function App() {
         <Route path="/Profile" element={<ProfileBar user={user} setUser={setUser} token={token} />} />
         <Route path="/GenerateID" element={<GenerateID />} />
         <Route path="/IDCreation" element={<IDCreation creations={creations} setCreations={setCreations} formData={formData} setFormData={setFormData} token={token} user={user} />} />
-        <Route path="/MyCreations" element={<MyCreations creations={creations} trash={trash} proTrash={proTrash} setProTrash={setProTrash} setCreations={setCreations} setTrash={setTrash} token={token} />} />
+        <Route path="/MyCreations" element={<MyCreations user={user} creations={creations} trash={trash} proTrash={proTrash} setProTrash={setProTrash} setCreations={setCreations} setTrash={setTrash} token={token} />} />
         {/* <Route path="/Templetes" element={<Templetes />} /> */}
         <Route path="/Register" element={<Register/>} />
         <Route path="/Login" element={<Login setToken={setToken} />} />

@@ -8,7 +8,7 @@ import Confirm from "../components/Confirm";
 import { deleteFromTrash, getDesignById, moveToTrash, restoreFromTrash } from "../api/api";
 import { useState } from "react";
 
-function MyCreations({ creations , trash , proTrash , setProTrash , token}) {
+function MyCreations({ creations , trash , proTrash , setProTrash , token , user}) {
 
   const [design , setDesign] = useState('');  
   const [tryComfirm , setTryConfirm] = useState(false);
@@ -62,7 +62,7 @@ function MyCreations({ creations , trash , proTrash , setProTrash , token}) {
 
   return (
     <div className="h-[100vh] w-full flex bg-purple-50">
-      <MyNavBar setProTrash={setProTrash} proTrash={proTrash} />
+      <MyNavBar setProTrash={setProTrash} proTrash={proTrash} user={user} />
 
       <div className="flex w-[95.5%] ">
         { proTrash ?

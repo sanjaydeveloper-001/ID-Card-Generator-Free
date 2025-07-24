@@ -69,7 +69,7 @@ function DisplayID({ setDone , setFormData , formData , token , user , setCreati
 
         <div className="absolute top-5 right-5 w-max h-10 px-5 flex justify-center items-center gap-5 ">
           <Link className=" text-gray-600 hover:text-blue-400 hover:underline" to="/">Home</Link>
-          <Link className=" text-gray-600 hover:text-blue-400 hover:underline" to="/MyCreations">My Creations</Link>
+          { user ? <Link className=" text-gray-600 hover:text-blue-400 hover:underline" to="/MyCreations">My Creations</Link> : ''}
           <IoExitOutline onClick={()=>{setDone(false)}} className="text-xl text-gray-600 hover:text-blue-400 cursor-pointer"/>
         </div>
 

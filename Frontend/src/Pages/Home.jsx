@@ -8,7 +8,7 @@ import Review from '../components/Review'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
-function Home({token}) {
+function Home() {
 
   return (
     <>
@@ -20,9 +20,9 @@ function Home({token}) {
       
       <HowItWorks/>
 
-      <div className='w-full h-80 bg-white'>
+      {/* <div className='w-full h-80 bg-white'>
 
-      </div>
+      </div> */}
 
       {/* <Review/> */}
 

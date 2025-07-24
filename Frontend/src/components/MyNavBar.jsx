@@ -29,7 +29,8 @@ function MyNavBar({ setProTrash }) {
           </h1>
         </div>
         <div className="w-full h-max py-2 items-center flex flex-col">
-          <Link className="flex justify-center items-center border-1 rounded-[50%] h-9 w-9 hover:bg-gray-200" to="/Profile" ><IoPersonOutline className="text-xl flex justify-center w-full"/></Link>
+          { user ? <Link className="flex justify-center items-center border-1 rounded-[50%] h-9 w-9 hover:bg-gray-200" to="/Profile" ><IoPersonOutline className="text-xl flex justify-center w-full"/></Link> :
+          <Link className="flex justify-center items-center border-1 rounded-[50%] h-9 w-9 hover:bg-gray-200" to="/Login" ><IoPersonOutline className="text-xl flex justify-center w-full"/></Link> }
         </div>
       </div>
   )
