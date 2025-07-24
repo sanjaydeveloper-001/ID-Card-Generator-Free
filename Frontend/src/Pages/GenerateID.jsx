@@ -19,7 +19,6 @@ function GenerateID() {
       <div className="group relative h-100 w-100 flex flex-col justify-center items-center rounded-2xl shadow-[0_0_25px_gray]">
         <img src={triangle} className='transition-all duration-400 absolute -left-130 rotate-20 bottom-0 group-hover:rotate-0' alt="" />
         <Link to="/IDCreation" className="py-2 px-5 bg-blue-500 text-2xl text-white rounded-3xl font-semibold cursor-pointer hover:bg-blue-600" >Generate ID</Link>
-        <h2 className="mt-3">or Select Templetes</h2>
         <img src={IDcard} className='transition-all duration-400 absolute -right-50 w-30 top-0 -rotate-20 group-hover:rotate-0' alt="" />
       </div> 
       {/* <div className=' h-max w-full flex flex-wrap justify-center items-center gap-25 pb-20'>
@@ -35,11 +34,6 @@ function GenerateID() {
         }
 
       </div> */}
-
-      {
-        openCreation &&
-        <IDCreation />
-      }
     </div>
     </>
 

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoHomeOutline, IoAlbumsOutline , IoPersonOutline , IoArrowBack , IoCreateOutline } from "react-icons/io5";
 import { HiOutlineTrash } from "react-icons/hi2";
 
-function MyNavBar({ setProTrash , proTrash }) {
+function MyNavBar({ setProTrash }) {
 
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ function MyNavBar({ setProTrash , proTrash }) {
           </h1>
         </div>
         <div className="w-full h-max py-2 items-center flex flex-col">
-          <h1 className="flex justify-center items-center border-1 rounded-[50%] h-9 w-9"><IoPersonOutline className="text-xl flex justify-center w-full"/></h1>
+          <Link className="flex justify-center items-center border-1 rounded-[50%] h-9 w-9 hover:bg-gray-200" to="/Profile" ><IoPersonOutline className="text-xl flex justify-center w-full"/></Link>
         </div>
       </div>
   )

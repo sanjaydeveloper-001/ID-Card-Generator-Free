@@ -3,7 +3,6 @@ import Logo from "./Logo";
 import NavBar from "./NavBar";
 import { useEffect, useState } from "react";
 import LogBar from "./LogBar";
-import ProfileBar from "./ProfileBar";
 
 function Header({ user , setUser , token}) {
 
@@ -12,7 +11,7 @@ function Header({ user , setUser , token}) {
   const [showProfile , setShowProfile] = useState(false);
 
   useEffect (() => {
-    if(location.pathname === '/MyCreations'){
+    if(location.pathname === '/MyCreations' || location.pathname === '/Profile'){
       setShowHeader(false);
     }
     else{
@@ -28,12 +27,8 @@ function Header({ user , setUser , token}) {
             <Logo/>
             <NavBar user={user}/>
           </div>
-          {
-            showProfile ? 
-            <ProfileBar user={user}  setUser={setUser} setShowProfile={setShowProfile} token={token} /> :
-            <LogBar user={user} setUser={setUser} setShowProfile={setShowProfile}/>
-            
-          }
+  
+            <LogBar user={user} setUser={setUser}/>
 
         </div> 
         :

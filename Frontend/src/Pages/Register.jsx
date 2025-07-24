@@ -30,21 +30,6 @@ function Register() {
 
   const handleRegister = async () => {
 
-    if(password != confirmPassword){
-      toast.error('Password Mismatch!',{
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Bounce,
-      })
-      return;
-    }
-
     const res = await registerUser({ firstname , lastname , email , password });
     if (res.token) {
         toast.error(`Registered`, {
@@ -59,7 +44,6 @@ function Register() {
           transition: Bounce,
         });
       navigate("/Login");
-      localStorage.setItem("token", res.token);
     } else {
       toast.error(`${res.msg}`, {
           position: "top-center",
@@ -78,9 +62,23 @@ function Register() {
 
   const handleVerifyEmail = async (e) =>{
     e.preventDefault();
+    if(password != confirmPassword){
+      toast.error('Password Mismatch!',{
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+      })
+      return;
+    }
     try {
       console.log(email)
-      const res = await axios.post('http://localhost:5000/verifyemail' ,{
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_LINK}/verifyemail` ,{
         email : email
       });
       if(res.data.success){
@@ -100,7 +98,18 @@ function Register() {
         });
       }
     } catch (error) {
-      console.log(error)
+      console.log("Error: "+ error) 
+      toast.error(`${error}`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
 
     }
 
@@ -111,7 +120,7 @@ function Register() {
     <div className="fixed w-full h-[100vh] flex items-center justify-center z-5 bg-black/70 ">
       <ToastContainer/>
         <div className={`w-[800px] h-[550px] bg-white rounded-2xl flex relative shadow-[0_0_20px_gray] ${vibrate ? "animate-vibrate" : ""}`}>
-            <h1 onClick={()=> navigate(-1)} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 top-0 bg-black rounded-[50%]"><IoClose/></h1>
+            <h1 onClick={()=> navigate('/')} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 top-0 bg-black rounded-[50%]"><IoClose/></h1>
 
             <div style={{backgroundImage : `url(${reg_back})`}} className='w-[45%] h-full rounded-l-2xl bg-cover bg-center flex justify-center items-center'>
                 <img src={reg_Img} className='h-70' alt="" />
@@ -144,7 +153,7 @@ function Register() {
                     }
                   </div>
                   <Link to="/Login" className='hover:text-purple-500 w-max cursor-pointer'>Already Have ?</Link>
-                  <button className='w-full h-10 bg-purple-500 rounded-[5px] text-white'>Let Start</button>
+                  <button className='w-full h-10 bg-purple-500 rounded-[5px] text-white cursor-pointer hover:bg-purple-600'>Let Start</button>
                 </form>
 
             </div>

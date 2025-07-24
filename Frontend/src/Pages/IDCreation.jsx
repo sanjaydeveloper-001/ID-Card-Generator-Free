@@ -93,21 +93,27 @@ function IDCreation({ setCreations , formData , setFormData , token , user}) {
     if (college.length < 3) {
       setError(true);
       setCollegeLogo(null);
-      return
+      return;
     }
+  
     setLoading(true);
+    const backendUrl = import.meta.env.VITE_BACKEND_LINK ;
+    console.log(backendUrl);
+  
     try {
-      const response = await axios.post(`${import.meta.env.VITE_SERP_LINK}/search-college`, {
-        collegeName: college.trim()
+      const response = await axios.post(`${backendUrl}/search-college`, {
+        collegeName: college.trim(),
       });
       setCollegeLogo(response.data.logo);
+      console.log("Done");
     } catch (error) {
-      setCollegeLogo(NoLogo)
-      console.error(error);
+      console.error("❌ fetchLogo error:", error);
+      setCollegeLogo(NoLogo);
     } finally {
       setLoading(false);
     }
   };
+
 
   const regenerate = () =>{
     setCollegeLogo(null);

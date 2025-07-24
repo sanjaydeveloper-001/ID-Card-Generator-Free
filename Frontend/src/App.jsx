@@ -11,6 +11,7 @@ import Login from "./Pages/Login";
 import { jwtDecode } from 'jwt-decode';
 import { fetchCreations, fetchTrash, getUser } from "./api/api";
 import Loading from "./Pages/Loading";
+import ProfileBar from "./Pages/ProfileBar";
 
 function App() {    
   
@@ -67,6 +68,7 @@ function App() {
       
       <Routes >
         <Route path="/" element={<Home token={token} />} />
+        <Route path="/Profile" element={<ProfileBar user={user} setUser={setUser} token={token} />} />
         <Route path="/GenerateID" element={<GenerateID />} />
         <Route path="/IDCreation" element={<IDCreation creations={creations} setCreations={setCreations} formData={formData} setFormData={setFormData} token={token} user={user} />} />
         <Route path="/MyCreations" element={<MyCreations creations={creations} trash={trash} proTrash={proTrash} setProTrash={setProTrash} setCreations={setCreations} setTrash={setTrash} token={token} />} />

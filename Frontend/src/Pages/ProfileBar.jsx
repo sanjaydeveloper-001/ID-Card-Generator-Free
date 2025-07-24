@@ -4,11 +4,13 @@ import photo from '../assets/profileImg.jpg';
 import { useState } from "react";
 import { updatProfile , removeProfilePhoto } from "../api/api";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 function ProfileBar({user , setUser , setShowProfile ,token }) {
             
   const [img, setImg] = useState(null);
-  const userImg  = user?.profilePhoto;
+  const navigate = useNavigate();
+  const userImg = user?.profilePhoto;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -22,6 +24,7 @@ function ProfileBar({user , setUser , setShowProfile ,token }) {
   const addProfile = async(data) => {
     try {
       const res = await updatProfile(data , token);
+      setImg(null);
       window.location.reload();
     } catch (error) {
       console.log(error);
@@ -38,10 +41,10 @@ function ProfileBar({user , setUser , setShowProfile ,token }) {
   }
   
   return (
-    <div className='w-full h-[100vh] bg-black/80 top-0 right-0 fixed flex justify-center items-center'>
+    <div className='w-full h-[100vh] bg-black/70 top-0 right-0 fixed flex justify-center items-center'>
 
       <div className='w-max h-[450px] bg-white rounded-xl relative flex'>
-        <h1 onClick={() => setShowProfile(false)} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 bg-black rounded-[50%]" ><IoClose/></h1>
+        <h1 onClick={() => navigate(-1)} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 bg-black rounded-[50%]" ><IoClose/></h1>
 
          { !(userImg || img) ?
           <div className='h-full w-[300px] bg-blue-400 rounded-l-xl flex flex-col justify-center items-center'>
@@ -60,7 +63,7 @@ function ProfileBar({user , setUser , setShowProfile ,token }) {
                 <h1 className="flex px-4 py-1 bg-gray-50 items-center gap-1 rounded-2xl hover:bg-gray-200 cursor-pointer" onClick={()=> addProfile(img)}>Set <IoMdCheckmarkCircleOutline/></h1>
                 : '' 
               }
-              <h1 className="flex px-4 py-1 bg-gray-50 items-center gap-1 rounded-2xl hover:bg-gray-200 cursor-pointer" onClick={removeProfPhoto}>Delete <MdDeleteOutline/></h1>
+              <h1 className="flex px-4 py-1 bg-gray-50 items-center gap-1 rounded-2xl hover:bg-gray-200 cursor-pointer" onClick={()=>{ img ? setImg(null) : removeProfPhoto() }}>Delete <MdDeleteOutline/></h1>
             </div>
           </div>}
 
@@ -97,7 +100,7 @@ function ProfileBar({user , setUser , setShowProfile ,token }) {
                 onClick={()=>{
                   setUser(null);
                   localStorage.removeItem("token");
-                  setShowProfile(false);
+                  navigate('/');
                   window.location.reload();
                 }}
               >

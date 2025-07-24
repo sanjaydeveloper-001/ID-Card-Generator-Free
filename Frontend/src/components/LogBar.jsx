@@ -10,7 +10,7 @@ function LogBar({ user , setShowProfile}) {
             user ? 
             <div className='flex items-center gap-3 text-blue-600'>
               <CgProfile className='text-2xl' />
-              <h1 className='text-[18px] font-medium hover:text-blue-400 cursor-pointer hover:underline' onClick={()=>{ setShowProfile(true) }}  >{user?.firstname} {user?.lastname}</h1>
+              <Link className='text-[18px] font-medium hover:text-blue-400 cursor-pointer hover:underline' to="/Profile"  >{user?.firstname} {user?.lastname}</Link>
             </div>
             :
             <div className='flex w-max items-center px-3 text-white gap-5'>

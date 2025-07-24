@@ -42,7 +42,7 @@ function Login({ setToken }) {
         <div className="fixed w-full h-[100vh] bg-black/80 flex items-center justify-center z-5">
           <ToastContainer/>
             <div className='w-[800px] h-[550px] bg-white rounded-2xl flex relative'>
-                <h1 onClick={()=> navigate(-1)} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 top-0 bg-black rounded-[50%]"><IoClose/></h1>
+                <h1 onClick={()=> navigate('/')} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 top-0 bg-black rounded-[50%]"><IoClose/></h1>
     
                 <div  className='w-[45%] h-full rounded-l-2xl bg-gradient-to-b from-[#F3CFE9] to-[#8B47B6] flex justify-center items-center'>
                     <img src={Login_Img} className='h-120 w-max flex-shrink-0 scale-x-[-1] ' alt="" />
