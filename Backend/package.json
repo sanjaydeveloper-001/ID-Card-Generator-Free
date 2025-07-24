@@ -4,9 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "frontend": "npm run dev --prefix id_card_generator",
-    "dev": "concurrently \"npm run server\" \"npm run frontend\""
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

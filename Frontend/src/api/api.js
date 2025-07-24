@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/user";
+const API_BASE = `${import.meta.env.VITE_BACKEND_LINK}/api/user`;
 
 // Profile photo
 
