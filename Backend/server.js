@@ -5,8 +5,7 @@ const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const userRoutes = require('./routes/userRoutes'); // your user routes
-const reviewRoutes = require('./routes/review');   // your review routes
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,7 +26,6 @@ mongoose.connect(process.env.MONGO_URL || process.env.MONGO_URI, {
 
 // Routes
 app.use("/api/user", userRoutes);
-app.use("/api/review", reviewRoutes);
 
 // Email validation using Abstract API
 app.post("/verifyemail", async (req, res) => {

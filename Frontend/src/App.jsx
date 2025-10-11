@@ -35,9 +35,9 @@ function App() {
       setCreations(fetchedCreations);
       setTrash(fetchedTrash);
 
-      // Fetch reviews
-      const reviewData = await fetchReviews(); // <-- returns JSON directly
-      setReviews(reviewData);
+      // // Fetch reviews
+      // const reviewData = await fetchReviews(); // <-- returns JSON directly
+      // setReviews(reviewData);
 
     } catch (error) {
       console.log("Error fetching data:", error);

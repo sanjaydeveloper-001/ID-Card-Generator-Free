@@ -2,8 +2,8 @@ import { useState } from "react";
 import { addReview } from "../api/review";
 
 function ReviewPage({ user, reviews, setReviews, token }) {
-  const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [text, setText] = useState("");
+  // const [loading, setLoading] = useState(false);
 
   const sampleReviews = [
     { _id: "1", userName: "Alice Johnson", text: "Amazing ID card generator! Really easy to use and the templates look professional.", createdAt: "2025-10-12T02:00:00Z" },
@@ -13,21 +13,21 @@ function ReviewPage({ user, reviews, setReviews, token }) {
     { _id: "5", userName: "Emma Davis", text: "Helpful features and smooth experience. Highly recommend it to students and staff!", createdAt: "2025-10-12T02:40:00Z" }
   ];
 
-  // Handle adding a review
-  const handleAddReview = async (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    setLoading(true);
-    try {
-      const newReview = await addReview(text, token);
-      setReviews([newReview, ...reviews]);
-      setText("");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // // Handle adding a review
+  // const handleAddReview = async (e) => {
+  //   e.preventDefault();
+  //   if (!text.trim()) return;
+  //   setLoading(true);
+  //   try {
+  //     const newReview = await addReview(text, token);
+  //     setReviews([newReview, ...reviews]);
+  //     setText("");
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const displayReviews = reviews?.length ? reviews : sampleReviews;
 
@@ -36,7 +36,7 @@ function ReviewPage({ user, reviews, setReviews, token }) {
       <h1 className="text-3xl font-bold mb-6 text-gray-800">User Reviews</h1>
 
       {/* Review Form */}
-      {
+      {/*
         user && 
         <form onSubmit={handleAddReview} className="mb-8 flex flex-col gap-4">
         <textarea
@@ -54,7 +54,7 @@ function ReviewPage({ user, reviews, setReviews, token }) {
           {loading ? "Submitting..." : "Submit Review"}
         </button>
       </form>
-      }
+      // */}
 
       {/* Reviews List - Horizontal Scroll */}
       <div className="flex overflow-x-auto gap-4 py-2" style={{ overflowX: "auto", scrollbarWidth: "none" }}>
