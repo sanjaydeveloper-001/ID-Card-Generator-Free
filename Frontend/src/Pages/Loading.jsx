@@ -11,7 +11,7 @@ function Loading() {
     },[])
 
   return (
-    <div className='fixed w-full h-[100vh] flex flex-col justify-center items-center z-10 bg-white'>
+    <div className='fixed w-full h-[100vh] flex flex-col justify-center items-center z-80 bg-white'>
         <Lottie
             autoPlay
             lottieRef={lottieRef}

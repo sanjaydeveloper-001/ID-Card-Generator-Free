@@ -1,38 +1,92 @@
 import { IoClose } from "react-icons/io5";
 import { LuDownload } from "react-icons/lu";
-import { IoIosStarOutline , IoIosStar } from "react-icons/io";
-import { FiEdit2 } from "react-icons/fi";
 
-function DisplayCard2( {design , setDesign , handleDeleteCreation }) {
-
-    const handleDownload = () =>{
-    const link = document.createElement('a');
+function DisplayCard2({
+  design,
+  mode,
+  setDesign,
+  handleDeleteCreation,
+  setDeleteDesign,
+  setTryConfirm,
+}) {
+  const handleDownload = () => {
+    const link = document.createElement("a");
     link.href = design.preview;
     link.download = design.fileName;
     link.click();
-  }
+  };
 
-    console.log(design);
+  // 🟢 Handles overlay click (closes modal if user clicks outside card)
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setDesign("");
+    }
+  };
+
   return (
-    <div className='fixed top-0 right-0 w-full h-[100vh] bg-black/70 z-5 flex justify-center items-center'>
-        <div className=' w-max h-130 bg-white rounded-2xl relative flex'>
-            <h1 onClick={() => setDesign('')} className="absolute -right-10 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 bg-black rounded-[50%]" ><IoClose/></h1>
-            <div className="w-max h-full bg-gray-200 rounded-l-2xl p-5 flex justify-center items-center relative">
-                <h1 className="w-10 h-10 border-1 absolute top-2 right-2 text-xl items-center justify-center flex rounded-[5px] cursor-pointer hover:bg-gray-300 bg-blue-100"><FiEdit2/></h1>
-                <img src={design.preview} className="h-100 rounded-xl w-max flex-shrink-1" alt="" />
-            </div>
-            <div className="w-[300px] h-full rounded-r-2xl p-5 flex flex-col">
-                <h1 className="text-3xl font-bold mb-1">{design.fileName}</h1>
-                <p className="mb-10">Created on : {design.createdDate}</p>
-               
-                <div className="w-full flex items-center justify-between">
-                    <h1 className="h-10 w-full bg-blue-400 text-[18px] flex justify-center items-center gap-2 rounded-[5px] text-white hover:bg-blue-500 cursor-pointer" onClick={handleDownload}><LuDownload/> Download</h1>
-                    <h1 className="h-10 w-max px-2 border-1 items-center justify-center flex text-[15px] rounded-[5px] flex-shrink-0 ml-1 hover:bg-gray-200 cursor-pointer" onClick={()=> handleDeleteCreation(design)}>Delete</h1>
-                </div>
-            </div>
+    <div
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black/30 backdrop-blur-[1px] p-4"
+      onClick={handleOverlayClick} // ✅ closes when clicking outside the card
+    >
+      <div
+        className="relative w-[90%] sm:w-[80%] md:w-[70%] max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row transition-transform duration-300"
+      >
+        {/* Close Button */}
+        <button
+          onClick={() => setDesign("")}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl p-1 rounded-full bg-white cursor-pointer transition-colors shadow-gray-400 shadow-sm"
+        >
+          <IoClose />
+        </button>
+
+        {/* Left Section - Image */}
+        <div className="flex-1 bg-gray-50 p-4 sm:p-6 flex justify-center items-center rounded-t-xl md:rounded-l-xl md:rounded-tr-none border-b md:border-b-0 md:border-r border-gray-200">
+          <img
+            src={design.preview}
+            alt="Preview"
+            className="w-full max-w-full max-h-[50vh] sm:max-h-[60vh] md:max-h-[70vh] rounded-lg object-contain shadow-lg transition-shadow hover:shadow-2xl"
+          />
         </div>
+
+        {/* Right Section - Details */}
+        <div className="flex-1 p-4 sm:p-6 flex flex-col justify-between rounded-b-xl md:rounded-r-xl md:rounded-bl-none">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-1 truncate">
+              {design.fileName}
+            </h2>
+            <p className="text-gray-500 text-sm sm:text-base">
+              Created on: {design.createdDate}
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <button
+              onClick={handleDownload}
+              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-md md:rounded-xl py-2 sm:py-3 shadow-md cursor-pointer transition-all duration-300"
+            >
+              <LuDownload className="text-lg" /> Download
+            </button>
+            <button
+              onClick={() => {
+                if (mode === "Creation") {
+                  setDesign("");
+                  handleDeleteCreation(design);
+                } else {
+                  setDesign("");
+                  setTryConfirm(true);
+                  setDeleteDesign(design);
+                }
+              }}
+              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-md md:rounded-xl py-2 sm:py-3 shadow-md cursor-pointer transition-all duration-300"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default DisplayCard2
+export default DisplayCard2;

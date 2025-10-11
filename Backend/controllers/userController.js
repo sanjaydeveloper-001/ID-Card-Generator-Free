@@ -1,10 +1,50 @@
 const User = require('../Models/User');
+const sendEmail = require("../utils/sendMail.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        firstname: name.split(" ")[0],
+        lastname: name.split(" ")[1] || "",
+        email,
+        password: null,
+        profilePhoto: picture,
+        provider: "google",
+      });
+    }
+
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    res.json({ token: jwtToken });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ msg: "Google Login Failed" });
+  }
+};
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-exports.updateProfilePhoto = async (req, res) => {
+const updateProfilePhoto = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     const { profilePhoto } = req.body;
@@ -20,7 +60,7 @@ exports.updateProfilePhoto = async (req, res) => {
   }
 };
 
-exports.removeProfilePhoto = async (req, res) => {
+const removeProfilePhoto = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
 
@@ -34,22 +74,32 @@ exports.removeProfilePhoto = async (req, res) => {
 };
 
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
   const { firstname , lastname , email, password } = req.body;
   const userExists = await User.findOne({ email });
   if (userExists) return res.status(400).json({ msg: "Email is Already Registered!" });
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.create({ firstname , lastname , password: hashedPassword, email});
+
+  const subject = "Welcome to ID Card Generator!";
+  const html = `
+    <h1>Hello ${firstname}${lastname}!</h1>
+    <p>You have successfully registered on our <strong>ID Card Generator</strong> website.</p>
+    <p>Start creating your ID cards now!</p>
+  `;
+
+  sendEmail(email, subject, html);
+
   res.json({ token: generateToken(user._id) });
 };
 
-exports.getUser = async (req, res) => {
+const getUser = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.json(user);
 }
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   const { email , password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ msg: "User not found!" });
@@ -60,7 +110,7 @@ exports.login = async (req, res) => {
   res.json({ token: generateToken(user._id) });
 };
 
-exports.getSingleDesign = async (req, res) => {
+const getSingleDesign = async (req, res) => {
   const user = await User.findById(req.user.id);
   const id = req.params.id;
   const creation = [...user.myCreations, ...user.trash].find(c => c._id.toString() === id);
@@ -71,13 +121,13 @@ exports.getSingleDesign = async (req, res) => {
 
 // Handle Trash
 
-exports.getTrash = async (req, res) => {
+const getTrash = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.json(user.trash);
 };
 
 
-exports.moveToTrash = async (req, res) => {
+const moveToTrash = async (req, res) => {
   const user = await User.findById(req.user.id);
   const id = req.params.id;
 
@@ -91,7 +141,7 @@ exports.moveToTrash = async (req, res) => {
   res.json({ msg: "Moved to trash", removed });
 };
 
-exports.restoreFromTrash = async (req, res) => {
+const restoreFromTrash = async (req, res) => {
   const user = await User.findById(req.user.id);
   const id = req.params.id;
 
@@ -105,7 +155,7 @@ exports.restoreFromTrash = async (req, res) => {
   res.json({ msg: "Restored successfully", restored });
 };
 
-exports.deleteFromTrash = async (req, res) => {
+const deleteFromTrash = async (req, res) => {
   const user = await User.findById(req.user.id);
   user.trash = user.trash.filter(c => c._id.toString() !== req.params.id);
   await user.save();
@@ -115,7 +165,7 @@ exports.deleteFromTrash = async (req, res) => {
 
 // Handle Creations
 
-exports.addCreation = async (req, res) => {
+const addCreation = async (req, res) => {
   const user = await User.findById(req.user.id);
   const creation = req.body;
 
@@ -128,12 +178,12 @@ exports.addCreation = async (req, res) => {
   res.status(201).json({ msg: "Creation added successfully", creation });
 };
 
-exports.getCreations = async (req, res) => {
+const getCreations = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.json(user.myCreations);
 };
 
-exports.deleteFromCreations = async (req, res) => {
+const deleteFromCreations = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     const id = req.params.id;
@@ -145,4 +195,22 @@ exports.deleteFromCreations = async (req, res) => {
   } catch (err) {
     res.status(500).json({ msg: "Failed to delete", error: err.message });
   }
+};
+
+
+module.exports = {
+  register,
+  login,
+  getSingleDesign,
+  addCreation,
+  getCreations,
+  deleteFromCreations,
+  getTrash,
+  deleteFromTrash,
+  moveToTrash,
+  restoreFromTrash,
+  getUser,
+  updateProfilePhoto,
+  removeProfilePhoto,
+  googleLogin
 };

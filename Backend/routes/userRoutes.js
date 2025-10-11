@@ -15,7 +15,8 @@ const {
   restoreFromTrash,
   getUser,
   updateProfilePhoto,
-  removeProfilePhoto
+  removeProfilePhoto,
+  googleLogin
 } = require("../controllers/userController");
 const protect = require("../middleware/authMiddleware");
 
@@ -38,5 +39,7 @@ router.get("/trash", protect, getTrash);
 router.post("/trash/:id", protect, moveToTrash); 
 router.put("/restore/:id", protect, restoreFromTrash);
 router.delete("/trash/:id", protect, deleteFromTrash);
+router.post("/google-login", googleLogin);
+
 
 module.exports = router;

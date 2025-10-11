@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@react-oauth/google": "^0.12.2",
     "@tailwindcss/vite": "^4.1.8",
-    "axios": "^1.10.0",
+    "axios": "^1.12.2",
+    "framer-motion": "^12.23.21",
     "html2canvas": "^1.4.1",
     "jwt-decode": "^4.0.0",
     "lottie-react": "^2.4.1",
@@ -20,7 +22,7 @@
     "react-confetti-explosion": "^3.0.3",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^7.6.1",
+    "react-router-dom": "^7.9.3",
     "react-toastify": "^11.0.5",
     "tailwindcss": "^4.1.8"
   },

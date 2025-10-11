@@ -1,9 +1,6 @@
-import { BrowserRouter, Route, Routes, useAsyncError, useNavigate } from "react-router-dom";
-import Header from "./components/Header";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
-import GenerateID from "./Pages/GenerateID";
 import MyCreations from "./Pages/MyCreations";
-// import Templetes from "./Pages/Templetes";
 import IDCreation from "./Pages/IDCreation";
 import { useEffect, useState } from "react";
 import Register from "./Pages/Register";
@@ -12,70 +9,61 @@ import { jwtDecode } from 'jwt-decode';
 import { fetchCreations, fetchTrash, getUser } from "./api/api";
 import Loading from "./Pages/Loading";
 import ProfileBar from "./Pages/ProfileBar";
+import { fetchReviews } from "./api/review";
 
 function App() {    
-  
-  const [user , setUser] = useState('');
-  const [token , setToken ]= useState(localStorage.getItem("token"));
-
-  const [formData , setFormData] = useState({});
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [formData, setFormData] = useState({});
   const [creations, setCreations] = useState([]);
-  const [trash , setTrash] = useState([]);
-  const [proTrash , setProTrash] = useState(false);
-  const [loading , setLoading ] = useState(false);
+  const [trash, setTrash] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
- useEffect( () => {
-  if(token){
-    const fetchUser = async ()=> {
-        try {
-        const res = await getUser(token);
-        setUser(res);
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchUser();
-  }
-  }, [token]);
-
-  useEffect(()=>{
-    setLoading(true);
-    setTimeout(()=>{
-      setLoading(false);
-    },1000)
-  },[])
-
+  // Fetch user + creations + trash
   useEffect(() => {
-    if (user && token) {
-      (async () => {
-        const fetchedCreations = await fetchCreations(token);
-        const fetchedTrash = await fetchTrash(token);
-        setCreations(fetchedCreations);
-        setTrash(fetchedTrash);
-      })();
+  const fetchUserData = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const userData = await getUser(token);
+      setUser(userData);
+
+      const fetchedCreations = await fetchCreations(token);
+      const fetchedTrash = await fetchTrash(token);
+      setCreations(fetchedCreations);
+      setTrash(fetchedTrash);
+
+      // Fetch reviews
+      const reviewData = await fetchReviews(); // <-- returns JSON directly
+      setReviews(reviewData);
+
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [user, token]);
+  };
+
+  fetchUserData();
+}, [token]);
 
   return (
     <BrowserRouter>
       
-      { loading ? <Loading/> : ''}
-      <Header user={user} setUser={setUser} token={token} />
-
-
-
-      
+      { loading && <Loading/> }
       <Routes >
-        <Route path="/" element={<Home token={token} />} />
-        <Route path="/Profile" element={<ProfileBar user={user} setUser={setUser} token={token} />} />
-        <Route path="/GenerateID" element={<GenerateID />} />
+        <Route path="/" element={<Home reviews={reviews} setReviews={setReviews} token={token} user={user} setShowProfile={setShowProfile} />} />
+        {/* <Route path="/GenerateID" element={<GenerateID />} /> */}
         <Route path="/IDCreation" element={<IDCreation creations={creations} setCreations={setCreations} formData={formData} setFormData={setFormData} token={token} user={user} />} />
-        <Route path="/MyCreations" element={<MyCreations user={user} creations={creations} trash={trash} proTrash={proTrash} setProTrash={setProTrash} setCreations={setCreations} setTrash={setTrash} token={token} />} />
+        <Route path="/MyCreations/*" element={<MyCreations setCreations={setCreations} setTrash={setTrash} user={user} creations={creations} trash={trash} token={token} setShowProfile={setShowProfile} />} />
         {/* <Route path="/Templetes" element={<Templetes />} /> */}
-        <Route path="/Register" element={<Register/>} />
+        <Route path="/Register" element={<Register setToken={setToken}/>} />
         <Route path="/Login" element={<Login setToken={setToken} />} />
       </Routes>
+
+      {showProfile && <ProfileBar setShowProfile={setShowProfile} user={user} setUser={setUser} token={token} /> }
     </BrowserRouter>
   );
 }

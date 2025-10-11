@@ -1,56 +1,73 @@
-import image from '../assets/profileImg.jpg'
-import colLogo from '../assets/collegelogo.png'
-import barcode from '../assets/barcode.png';
 import Default from '../utilities/Default';
+import barcode from '../assets/barcode.png';
+import image from '../assets/profileImg.jpg';
+import colLogo from '../assets/collegelogo.png';
 
-function Card({formData , logoBase64}) {
+function Card({ formData, divRef1 , divRef2 }) {
   return (
+    <div className="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
 
-    <div className='flex h-max items-center w-max p-10'>
-
-    <div className='flex w-max gap-20'>
-        
-        <div className='bg-white w-75 h-105 border-1 flex flex-col justify-between items-center p-5 rounded-2xl shadow-[0_0_20px_gray]'>
-            <div className='flex w-full items-center justify-center gap-5 px-3'>
-                <img src={ logoBase64 ? logoBase64 : formData.collegeLogo ? formData.collegeLogo : colLogo} className='w-15 ' />
-                <h1 className='font-bold text-center'>{formData.college? formData.college : Default.college }</h1>
-            </div>
-            <img className='w-35 h-40 border-1' src={formData.profile ? formData.profile : image}  />
-            <div className="flex flex-col items-center">
-                <h1 className='text-xl font-medium'> {formData.name ? formData.name : Default.name} </h1>
-                <h2 className='text-[18px]'>{formData.rollNum ? formData.rollNum : Default.roll}</h2>
-                <h2>{formData.dept ? formData.dept : Default.Department}</h2>
-            </div>
-            <div className='flex w-full justify-between'>
-                <h3>Valid : 2027</h3>
-                <h3>Fake</h3>
-            </div>
+      {/* Front Card */}
+      <div ref={divRef1} className="bg-white w-[250px] md:w-[280px] md:h-[400px] rounded-2xl p-5 py-8 flex flex-col items-center text-center shadow-md border border-[rgb(229,231,235)]">
+        {/* College Logo + Name */}
+        <div className="flex items-center gap-3 mb-3">
+          <img
+            src={formData.CollegeLogo || colLogo}
+            alt="Logo"
+            className="w-14 h-14 object-contain"
+          />
+          <h1 className="font-bold text-base text-[rgb(31,41,55)] leading-tight">
+            {formData.college || Default.college}
+          </h1>
         </div>
 
-        <div className='bg-white w-75 h-105 border-1 flex flex-col justify-between items-center p-3 rounded-2xl shadow-[0_0_20px_gray]'>
-            <div className="flex flex-col w-full">
-                <h2>D.O.B : {formData.DOB ? formData.DOB : Default.DOB} </h2>
-                <h2>Blood : {formData.Blood ? formData.Blood : Default.Blood} </h2>
-                <h2>Phone : {formData.phone ? formData.phone : Default.phone } </h2>
-                <h3>Address : {formData.Address ? formData.Address : Default.address}</h3>
-            </div>
-            <div className='flex flex-col items-center'>
-            <img src={barcode} className='w-[80%]' alt="" />
-            <h3>{formData.rollNum ? formData.rollNum : Default.roll}</h3>
-            </div>
-            <div className="flex flex-col items-center">
-                <h1 className='text-center'>{formData.college ? formData.college : Default.college}</h1>
-                <h4>{formData.collAdd ? formData.collAdd : Default.colladdress}</h4>
-                <h4>{formData.colltele ? formData.colltele : Default.collegetelephone}</h4>
-            </div>
+        {/* Profile Image */}
+        <img
+          src={formData.profile || image}
+          alt="Profile"
+          className="w-28 h-32 sm:w-32 sm:h-36 rounded-xl object-cover border-2 border-[rgb(107,114,128)] mb-3"
+        />
+
+        {/* Name, Roll, Dept */}
+        <div className="flex flex-col items-center text-[rgb(55,65,81)] text-sm sm:text-base mt-auto">
+          <h1 className="font-semibold">{formData.name || Default.name}</h1>
+          <p>{formData.rollNum || Default.roll}</p>
+          <p>{formData.dept || Default.Department}</p>
         </div>
-    </div>
+
+        {/* Validity & ID Verified */}
+        <div className="flex justify-between w-full text-xs sm:text-sm text-[rgb(75,85,99)] mt-3">
+          <span>Valid Till: 2027</span>
+          <span>ID Verified</span>
+        </div>
+      </div>
+
+      {/* Back Card */}
+      <div ref={divRef2} className="bg-white w-[250px] md:w-[280px] md:h-[400px] rounded-2xl shadow-md p-5 flex flex-col justify-between text-[rgb(31,41,55)] border border-[rgb(229,231,235)]">
+        {/* Personal Info */}
+        <div className="space-y-1 mb-3">
+          <p><strong>D.O.B:</strong> {formData.DOB || Default.DOB}</p>
+          <p><strong>Blood:</strong> {formData.Blood || Default.Blood}</p>
+          <p><strong>Phone:</strong> {formData.phone || Default.phone}</p>
+          <p><strong>Address:</strong> {formData.Address || Default.address}</p>
+        </div>
+
+        {/* Barcode */}
+        <div className="flex flex-col items-center mt-3">
+          <img src={barcode} className="w-4/5 mb-1" alt="Barcode" />
+          <p className="text-xs">{formData.rollNum || Default.roll}</p>
+        </div>
+
+        {/* College Details */}
+        <div className="text-center mt-3">
+          <h3 className="font-semibold">{formData.college || Default.college}</h3>
+          <p className="text-xs">{formData.collAdd || Default.colladdress}</p>
+          <p className="text-xs">{formData.colltele || Default.collegetelephone}</p>
+        </div>
+      </div>
 
     </div>
-
-
-    
-  )
+  );
 }
 
-export default Card
+export default Card;

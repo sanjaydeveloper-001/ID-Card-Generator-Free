@@ -1,144 +1,197 @@
 import { Link, useNavigate } from "react-router-dom";
-import checkmark from "../assets/patterns/Checkmark.json"
-import checkmarkImg from "../assets/patterns/checkmark.png"
-import { useEffect, useRef, useState } from 'react';
-import Lottie from 'lottie-react';
-import { FiDownload , FiEdit , FiSave } from "react-icons/fi";
-import confetti from '../assets/patterns/Confetti.json'
+import { useEffect, useRef, useState } from "react";
+import Lottie from "lottie-react";
+import { FiDownload, FiEdit, FiSave } from "react-icons/fi";
 import { IoExitOutline } from "react-icons/io5";
+import confetti from "../assets/patterns/Confetti.json";
 import { addCreation, fetchCreations } from "../api/api";
 
-
-function DisplayID({ setDone , setFormData , formData , token , user , setCreations}) {
-      
-  const [isComplete , setIsComplete] = useState(false);
+function DisplayID({
+  setDone,
+  setFormData,
+  formData,
+  token,
+  user,
+  setCreations,
+}) {
+  const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [completed, setComplete] = useState(false);
+  const [IDname, setIDname] = useState("Untitled-01");
   const lottieRef = useRef();
-  const [saved , setSaved] = useState(false);
-  const [isSaving , setIsSaving] = useState(false);
-  const [IDname , setIDname] = useState("Untitled-01");
-
   const navigate = useNavigate();
 
-  const today = new Date()
+  const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
     month: "long",
-    day: "numeric"
+    day: "numeric",
   });
 
-  const handleDownload = () =>{
-    const link = document.createElement('a');
-    link.href = formData.preview;
-    link.download = `${IDname ? IDname : "Untitled-01"}`;
-    link.click();
-  }
-
   useEffect(() => {
-    lottieRef.current.setSpeed(1.5);
+    if (lottieRef.current) lottieRef.current.setSpeed(1.2);
   }, []);
 
+  const handleDownload = async () => {
+    const link = document.createElement("a");
+    link.href = formData.preview;
+    link.download = `${IDname || "Untitled-01"}.png`;
+    link.click();
+  };
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
   const HandleShowSave = async () => {
-    if(user){
-      setIsSaving(true);
-      try {
-        const res = await addCreation (formData , token);
-        window.location.reload();
-        setSaved(true);
-
-        const updatedCreations = await fetchCreations(token);
-        setCreations(updatedCreations);
-
-      } catch (err) {
-        console.error("Failed to add creation:", err);
-      }
-    }
-    else{
-      console.log(token)
-      alert("Login First !")
-      navigate("/Login");
-    }
-
-    setTimeout( () =>{
+    if (!user) return navigate("/Login");
+    setIsSaving(true);
+    try {
+      await addCreation(formData, token);
+      setSaved(true);
+      const updated = await fetchCreations(token);
+      setCreations(updated);
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsSaving(false);
-    },1000);
-    
+    }
   };
 
   return (
-    <div className='w-full h-[100vh] bg-black/85 fixed top-0 left-0 flex justify-center items-center'>
-      <div className='relative w-[60%] h-[90vh] bg-white rounded-3xl flex flex-col items-center pb-20'>
-
-        <div className="absolute top-5 right-5 w-max h-10 px-5 flex justify-center items-center gap-5 ">
-          <Link className=" text-gray-600 hover:text-blue-400 hover:underline" to="/">Home</Link>
-          { user ? <Link className=" text-gray-600 hover:text-blue-400 hover:underline" to="/MyCreations">My Creations</Link> : ''}
-          <IoExitOutline onClick={()=>{setDone(false)}} className="text-xl text-gray-600 hover:text-blue-400 cursor-pointer"/>
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 sm:p-4 p-2">
+      <div
+        className="
+      bg-white 
+      rounded-3xl shadow-2xl 
+      p-6 sm:p-10 
+      w-full sm:w-4/5 lg:w-3/5 
+      h-max 
+      overflow-y-auto 
+      relative 
+      flex flex-col items-center 
+      scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent
+    "
+      >
+        {/* Close & Links */}
+        <div className="absolute top-4 right-4 flex gap-4 text-sm">
+          <Link to="/" className="text-gray-700 hover:text-blue-500">
+            Home
+          </Link>
+          {user && (
+            <Link
+              to="/MyCreations"
+              className="text-gray-700 hover:text-blue-500"
+            >
+              My Creations
+            </Link>
+          )}
+          <IoExitOutline
+            onClick={() => setDone(false)}
+            className="text-gray-700 hover:text-red-500 cursor-pointer"
+          />
         </div>
 
-        {
-          isComplete ? 
-            <img className='w-35 pl-3 my-4' src={checkmarkImg} alt="" />
-            :
-            <>
-            <Lottie
-              autoPlay
-              lottieRef={lottieRef}
-              loop={false}
-              animationData={checkmark}
-              className='w-40'
-              onComplete ={ ()=>{
-              setIsComplete(true);
-              }}
+        <div className="flex flex-col items-center text-center mt-4 relative">
+          <Lottie
+            lottieRef={lottieRef}
+            autoPlay
+            loop={false}
+            animationData={confetti}
+            onComplete={() => setComplete(true)}
+            className="w-full h-full sm:w-40 sm:h-40 absolute"
+            style={{ display: completed ? "none" : "block" }}
+          />
+          <h2 className="text-green-600 text-2xl sm:text-3xl font-bold mt-2">
+            Yes! You did it 🎉
+          </h2>
+          <p className="text-gray-600 mt-1 mb-4">
+            Your ID is ready. Save or download below:
+          </p>
+
+          {/* Responsive Image */}
+          <div className="w-full flex justify-center mt-2 mb-6 gap-3 sm:gap-6">
+            <img
+              src={formData.preview}
+              alt="Preview"
+              className="
+            w-auto
+            h-50
+            sm:h-80
+            rounded-xl 
+            sm:shadow-lg shadow-sm
+            shadow-gray-500 
+            border border-gray-200 
+            object-contain 
+            transition-transform duration-300 hover:scale-[1.02]
+          "
             />
-            <Lottie 
-              autoPlay
-              loop={false}
-              animationData={confetti}
-              className="fixed z-5 top-0 w-full h-full"
-            />
-            </>
-        }
-
-        <h2 className="text-3xl font-bold text-green-600 text-center">Yes! You did it 🎉</h2>
-        <p className="text-lg text-gray-700 text-center">Your ID is ready. Save or Download it below:</p>
-
-        <img src={formData.preview} className='h-[50vh]' alt="Vimage" />
-      
-        <div className='flex w-max px-5 h-20 items-center justify-center gap-5'>
-
-          <div onClick={()=>{setDone(false)}} className="group flex gap-2 items-center hover:scale-105 transition-all duration-100 cursor-pointer">
-            <h1 className=" h-10 w-10 border-3 border-gray-300 rounded-[50%] flex justify-center items-center group-hover:border-gray-400"><FiEdit/></h1>
-            <h1 className=" font-medium" style={{fontFamily: "Glory,sans-serif"}}>Edit</h1>
           </div>
 
-          {/* <div className="group flex gap-2 items-center hover:scale-105 transition-all duration-100 cursor-not-allowed">
-            <h1 className=" h-10 w-10 border-3 border-gray-300 rounded-[50%] flex justify-center items-center group-hover:border-gray-400 "><FiLayers/></h1>
-            <h1 className=" font-medium" style={{fontFamily: "Glory,sans-serif"}}>Templetes</h1>
-          </div> */}
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:justify-center">
+            <input
+              type="text"
+              value={formData.fileName || IDname}
+              onChange={(e) => {
+                setIDname(e.target.value);
+                setSaved(false);
+                setFormData((p) => ({
+                  ...p,
+                  fileName: e.target.value,
+                  createdDate: formattedDate,
+                }));
+              }}
+              className="border border-gray-300  py sm:px-3 py-2 rounded-md w-full sm:w-48 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+            />
 
-          <input onChange={(e)=>{setIDname(e.target.value), setSaved(false) , setFormData((prev) => ({
-                                                                                            ...prev, 
-                                                                                            fileName : e.target.value,
-                                                                                            createdDate : formattedDate
-                                                                                          })); }} 
-            value={formData.fileName ? formData.fileName : IDname} type="text" className="w-40 h-10 border-gray-300 border-3 px-2 outline-none focus:border-gray-400"  placeholder="Untitled-01"/>
+            <button
+              onClick={handleDownload}
+              className="bg-blue-600 hover:bg-blue-700 text-white  py px-4 py-2 rounded-md flex items-center justify-center gap-2"
+            >
+              <FiDownload /> Download
+            </button>
 
-          
-            <h1 onClick={handleDownload} className="flex items-center justify-center w-35 rounded-2xl gap-2 h-10 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">Download <FiDownload/></h1>
-          {
-            saved ?
-            <h1 onClick={HandleShowSave} className={`flex items-center justify-center w-30 rounded-2xl gap-2 h-10 bg-green-600 text-white cursor-not-allowed`}>Saved</h1>
-            :
-            ( isSaving ?
-              <h1 onClick={HandleShowSave} className={`flex items-center justify-center w-30 rounded-2xl gap-2 h-10 bg-black text-white cursor-default`}>Saving...</h1>
-              :
-              <h1 onClick={HandleShowSave} className={`flex items-center justify-center w-30 rounded-2xl gap-2 h-10 bg-red-600 hover:bg-red-700 text-white cursor-pointer`}>Save <FiSave/></h1>
-            )
-          }
+            {saved ? (
+              <button
+                disabled
+                className="bg-green-500 text-white  py px-4 py-2 rounded-md cursor-not-allowed"
+              >
+                Saved
+              </button>
+            ) : (
+              <button
+                onClick={HandleShowSave}
+                className={`  py px-4 py-2 rounded-md text-white flex items-center justify-center gap-2 ${
+                  isSaving ? "bg-gray-500" : "bg-red-600 hover:bg-red-700"
+                }`}
+              >
+                {isSaving ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <FiSave /> Save
+                  </>
+                )}
+              </button>
+            )}
+
+            <button
+              onClick={() => setDone(false)}
+              className="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md flex items-center justify-center gap-2"
+            >
+              <FiEdit /> Edit
+            </button>
+          </div>
         </div>
-
-
       </div>
     </div>
-  )
+  );
 }
 
-export default DisplayID
+export default DisplayID;

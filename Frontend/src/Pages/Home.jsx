@@ -7,11 +7,14 @@ import Reg_Login_Req from './Register'
 import Review from '../components/Review'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import Header from '../components/Header'
 
-function Home() {
+function Home({user, setShowProfile, reviews, setReviews}) {
 
   return (
     <>
+      <Header user={user} setShowProfile={setShowProfile} />
+
       <Intro/>
 
       <Features/>
@@ -24,7 +27,7 @@ function Home() {
 
       </div> */}
 
-      {/* <Review/> */}
+      <Review user={user} reviews={reviews} setReviews={setReviews}  />
 
       <Footer/>
 

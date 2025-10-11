@@ -5,86 +5,68 @@ import MyProjectsList from "../components/MyProjectsList";
 import MyTrashList from "../components/MyTrashList";
 import DisplayCard2 from "../components/DisplayCard2";
 import Confirm from "../components/Confirm";
-import { deleteFromTrash, getDesignById, moveToTrash, restoreFromTrash } from "../api/api";
+import { deleteFromTrash, moveToTrash, restoreFromTrash } from "../api/api";
 import { useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-function MyCreations({ creations , trash , proTrash , setProTrash , token , user}) {
+function MyCreations({ setCreations, setTrash, creations , trash , token , user, setShowProfile}) {
 
   const [design , setDesign] = useState('');  
   const [tryComfirm , setTryConfirm] = useState(false);
-  const [confirmed , setConfirmed] = useState('');
   const [deleteDesign , setDeleteDesign] = useState({});
+  const [mode , setMode] = useState('');
 
   const handleDeleteCreation = async ( proj ) => {
     try {
-      const result = moveToTrash(proj._id, token)
-       window.location.reload();
-
+      setCreations((prev) => prev.filter((item) => item._id !== proj._id));
+      setTrash((prev) => [...prev, proj]);
+      const result = await moveToTrash(proj._id, token);
     } catch (error) {
       console.log(error)
     }
   }
 
-    const fetchDesign = async (id) => {
-      try {
-        const res = await getDesignById(id , token);
-        console.log(res);
-        setDesign(res);
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
-    const handleTrash = (id , mode) => {
-
-      if(mode == 'Delete'){
-        try {
-          const res = deleteFromTrash(id , token);
-          console.log(res);
-          window.location.reload();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      else if(mode == 'Restore'){
-         try {
-          const res = restoreFromTrash(id, token);
-          console.log(res);
-          window.location.reload();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      else{
-        return;
-      }
+  const handleTrash = async (id, mode) => {
+  try {
+    if (mode === 'Delete') {
+      setTrash((prev) => prev.filter((item) => item._id !== id));
+      setCreations((prev) => prev.filter((item) => item._id !== id));
+      const res = await deleteFromTrash(id, token);
+    } else if (mode === 'Restore') {
+      setTrash((prev) => prev.filter((item) => item._id !== id));
+      setCreations((prev) => [...prev, deleteDesign]);
+      const res = await restoreFromTrash(id, token);
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   return (
-    <div className="h-[100vh] w-full flex bg-purple-50">
-      <MyNavBar setProTrash={setProTrash} proTrash={proTrash} user={user} />
+        <div className="h-[100vh] w-full flex flex-col sm:flex-row bg-purple-50">
+          <MyNavBar user={user} setShowProfile={setShowProfile} />
 
-      <div className="flex w-[95.5%] ">
-        { proTrash ?
-          <SideTrash trash={trash} /> :
-          <SideBar creations={creations} handleDeleteCreation={handleDeleteCreation} />}
-      
-        { proTrash ? 
-          <MyTrashList trash={trash} setTryConfirm={setTryConfirm} setDeleteDesign={setDeleteDesign} /> :
-          <MyProjectsList creations={creations} fetchDesign={fetchDesign} /> 
-        }
-      </div>
+          <Routes>
+            <Route path="/" element={<Navigate to="projects" replace />} />
+            <Route
+              path="projects"
+              element={<MyProjectsList creations={creations} setDesign={setDesign} setMode={setMode} handleDeleteCreation={handleDeleteCreation} />}
+            />
+            <Route
+              path="trash"
+              element={<MyTrashList trash={trash} setDesign={setDesign} setMode={setMode} />}
+            />
+          </Routes>
 
-      {
-        design ?
-        <DisplayCard2 design={design} setDesign={setDesign} handleDeleteCreation={handleDeleteCreation}/> : ''
-      }
-        
-        {
-        tryComfirm ? 
-        <Confirm deleteDesign={deleteDesign} setTryConfirm={setTryConfirm} handleTrash={handleTrash} /> : ''
-        }
-    </div>
+          { design &&
+            <DisplayCard2 mode={mode} design={design} setDeleteDesign={setDeleteDesign} setTryConfirm={setTryConfirm} setDesign={setDesign} handleDeleteCreation={handleDeleteCreation} />
+          }
+          {tryComfirm && (
+            <Confirm deleteDesign={deleteDesign} setTryConfirm={setTryConfirm} handleTrash={handleTrash} />
+          )}
+        </div>
   );
 }
 
