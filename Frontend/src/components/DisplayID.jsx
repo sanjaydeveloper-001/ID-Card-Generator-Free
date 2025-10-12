@@ -49,6 +49,10 @@ function DisplayID({
   }
 
   const HandleShowSave = async () => {
+    if(IDname.length < 3){
+      setIDname("Type atleast 3 char");
+      return;
+    }
     setFormData((p) => ({
       ...p,
       fileName: IDname,
@@ -68,6 +72,7 @@ function DisplayID({
       console.error(err);
     } finally {
       setIsSaving(false);
+      setDone(false);
     }
   };
 
@@ -143,17 +148,18 @@ function DisplayID({
           <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:justify-center">
             <input
               type="text"
-              value={formData.fileName || IDname}
+              value={IDname}
+              autoFocus={true}
               onChange={(e) => {
                 setIDname(e.target.value);
                 setSaved(false);
               }}
-              className="border border-gray-300  py sm:px-3 py-2 rounded-md w-full sm:w-48 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+              className={`border ${IDname == "Type atleast 3 char" ? 'text-red-500' : ''} border-gray-300  py sm:px-3 py-2 rounded-md w-full sm:w-48 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none`}
             />
 
             <button
               onClick={handleDownload}
-              className="bg-blue-600 hover:bg-blue-700 text-white  py px-4 py-2 rounded-md flex items-center justify-center gap-2"
+              className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white  py px-4 py-2 rounded-md flex items-center justify-center gap-2"
             >
               <FiDownload /> Download
             </button>
@@ -161,14 +167,14 @@ function DisplayID({
             {saved ? (
               <button
                 disabled
-                className="bg-green-500 text-white  py px-4 py-2 rounded-md cursor-not-allowed"
+                className=" bg-green-500 text-white  py px-4 py-2 rounded-md cursor-not-allowed"
               >
                 Saved
               </button>
             ) : (
               <button
                 onClick={HandleShowSave}
-                className={`  py px-4 py-2 rounded-md text-white flex items-center justify-center gap-2 ${
+                className={`cursor-pointer py px-4 py-2 rounded-md text-white flex items-center justify-center gap-2 ${
                   isSaving ? "bg-gray-500" : "bg-red-600 hover:bg-red-700"
                 }`}
               >

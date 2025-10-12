@@ -1,6 +1,6 @@
 import formInfo from "../utilities/Form";
 import LoadingImg from "../assets/patterns/Loading.gif";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 
 function FormInputs({
@@ -17,25 +17,23 @@ function FormInputs({
   loading,
   regenerate,
   handleCaptureIdCard,
-  logoBase64
+  logoBase64,
+  mainLoading,
+  setMainLoading
 }) {
   const formRef = useRef(null);
 
-  // Updated onChange handler to remove red borders dynamically
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-
-    // Remove red border as soon as user types
     if (value.trim()) {
       e.target.classList.remove("border-red-500");
     }
-
-    // Call parent handler
     handleChangeFormDetails(e);
   };
 
   const HandleSubmit = (e) => {
     e.preventDefault();
+    setMainLoading(true);
     const form = formRef.current;
     const inputs = form.querySelectorAll("input[required]");
     let allFilled = true;
@@ -58,12 +56,11 @@ function FormInputs({
     if (allFilled) {
       handleCaptureIdCard();
       setDone(true);
-    } else setDone(false);
+    } else{ setDone(false); setMainLoading(false); }
   };
 
   return (
     <form ref={formRef} className="w-full flex flex-col gap-6">
-      {/* Input Fields Grid */}
       <div className="grid sm:grid-cols-2 gap-5">
         {formInfo.map((info, index) => (
           <div key={index} className="flex flex-col w-full">
@@ -74,7 +71,7 @@ function FormInputs({
               id={info.id}
               type={info.type}
               value={formData[info.id] || ""}
-              onChange={handleInputChange} // Updated handler
+              onChange={handleInputChange}
               placeholder={info.place}
               className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-sm"
               required
@@ -161,7 +158,6 @@ function FormInputs({
               <button
                 onClick={() => {
                   fetchLogo();
-                  // document.getElementById("CollageName").classList.remove("text-red-400");
                 }}
                 type="button"
                 className="mt-3 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm font-medium"
@@ -176,9 +172,10 @@ function FormInputs({
       <button
         type="submit"
         onClick={HandleSubmit}
-        className="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base rounded-lg shadow-md transition"
+        disabled={mainLoading}
+        className="cursor-pointer w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base rounded-lg shadow-md transition"
       >
-        Generate ID
+        {mainLoading ? 'Generating...' : 'Generate ID'}
       </button>
     </form>
   );

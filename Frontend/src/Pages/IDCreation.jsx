@@ -13,6 +13,7 @@ function IDCreation({ setCreations, formData, setFormData, token, user }) {
   const [college, setCollege] = useState('');
   const [collegeLogo, setCollegeLogo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mainLoading, setMainLoading] = useState(false);
   const [error, setError] = useState(false);
   const [Done, setDone] = useState(false);
   const [logoBase64, setLogoBase64] = useState(null);
@@ -122,6 +123,8 @@ const handleCaptureIdCard = async () => {
       }));
     } catch (error) {
       console.error("Error generating merged image:", error);
+    }finally{
+      setMainLoading(false);
     }
   }
 };
@@ -138,10 +141,8 @@ const loadImage = (src) =>
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-[#f0f7ff] to-[#e4ecff]">
-      {/* Left: Card Preview Section */}
       <div className="lg:w-2.5/5 w-full bg-[#3b82f6] flex flex-col items-center justify-between py-10 px-6 relative h-max gap-10 md:h-screen">
-        
-        {/* Top Navigation */}
+
         <div className="w-full flex flex-col gap-5 sm:flex-row justify-between items-center">
           <h2 className="text-white text-3xl sm:text-2xl font-semibold tracking-wide">
             Hello, Designer 👋
@@ -168,7 +169,6 @@ const loadImage = (src) =>
           </div>
         </div>
 
-        {/* Card Display */}
         <Card 
           divRef1={divRef1}
           divRef2={divRef2}
@@ -181,7 +181,6 @@ const loadImage = (src) =>
         </p>
       </div>
 
-      {/* Right: Input Form */}
       <div className="lg:w-2.5/5 w-full flex flex-col justify-start p-6 sm:p-10 h-screen overflow-y-auto">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#021621] mb-2">
@@ -192,7 +191,6 @@ const loadImage = (src) =>
           </p>
         </div>
 
-        {/* Form Section */}
         <div className="bg-white shadow-lg rounded-3xl p-6 sm:p-8 border border-gray-100">
           <FormInputs
             fetchLogo={fetchLogo}
@@ -210,10 +208,11 @@ const loadImage = (src) =>
             setDone={setDone}
             handleCaptureIdCard={handleCaptureIdCard}
             logoBase64={logoBase64}
+            mainLoading={mainLoading}
+            setMainLoading={setMainLoading}
           />
         </div>
 
-        {/* Display ID */}
         {Done && (
           <DisplayID
             formData={formData}

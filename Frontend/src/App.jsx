@@ -26,7 +26,6 @@ function App() {
     try {
       const userData = await getUser(token);
       setUser(userData);
-
       const fetchedCreations = await fetchCreations(token);
       const fetchedTrash = await fetchTrash(token);
       setCreations(fetchedCreations);

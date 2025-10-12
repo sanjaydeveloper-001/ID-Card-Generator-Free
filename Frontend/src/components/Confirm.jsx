@@ -3,7 +3,7 @@ import { AiOutlineUndo } from "react-icons/ai";
 
 function Confirm({ deleteDesign, setTryConfirm, handleTrash }) {
   return (
-    <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-2">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-2">
       <div className="bg-gray-100 rounded-2xl max-w-md w-full p-6 flex flex-col gap-4 relative">
         <h1
           onClick={() => setTryConfirm(false)}
