@@ -52,6 +52,7 @@ function Login({ setToken }) {
           <IoClose />
         </button>
         <img
+            draggable={false}
             src={Login_Img}
             className="w-100 rounded-l-xl hidden md:flex"
             alt="Login Illustration"

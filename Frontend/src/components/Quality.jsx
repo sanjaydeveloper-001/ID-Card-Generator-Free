@@ -31,7 +31,7 @@ function Quality() {
             </button>
           ))}
         </div>
-        <img className="w-[80%] sm:w-[60%] md:w-[40%] lg:w-[50%] rounded-2xl shadow-lg" src={types.find(t => t.name === changeBg)?.img} alt={changeBg} />
+        <img draggable={false} className="w-[80%] sm:w-[60%] md:w-[40%] lg:w-[50%] rounded-2xl shadow-lg" src={types.find(t => t.name === changeBg)?.img} alt={changeBg} />
       </div>
     </section>
   );

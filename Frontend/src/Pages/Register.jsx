@@ -87,7 +87,7 @@ function Register({setToken}) {
         <h1 onClick={() => navigate('/')} className="absolute right-2 text-2xl hover:text-white cursor-pointer text-gray-200 p-1 top-2 bg-[#59bfde] rounded-full"><IoClose /></h1>
 
         <div className='hidden w-full md:w-2/5 h-60 md:h-auto rounded-t-2xl md:rounded-l-2xl bg-cover bg-center md:flex justify-center items-center'>
-          <img src={reg_Img} className='w-full h-full rounded-l-2xl' alt="Register" />
+          <img draggable={false} src={reg_Img} className='w-full h-full rounded-l-2xl' alt="Register" />
         </div>
 
         <div className='w-full md:w-3/5 p-6 md:p-10 flex flex-col'>

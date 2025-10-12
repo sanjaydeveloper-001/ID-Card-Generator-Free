@@ -93,7 +93,7 @@ function FormInputs({
           </h1>
           {formData.profile ? (
             <div className="relative">
-              <img src={formData.profile} alt="Profile" className="w-full h-52 object-cover rounded-lg shadow-md" />
+              <img draggable={false} src={formData.profile} alt="Profile" className="w-full h-52 object-cover rounded-lg shadow-md" />
               <button
                 type="button"
                 onClick={handleImageDelete}
@@ -129,6 +129,7 @@ function FormInputs({
             <>
               <h1 className="text-blue-900 font-semibold text-sm mb-2">College Logo</h1>
               <img
+                draggable={false}
                 src={loading ? LoadingImg : collegeLogo}
                 alt="College Logo"
                 className="h-28 object-contain mb-2"

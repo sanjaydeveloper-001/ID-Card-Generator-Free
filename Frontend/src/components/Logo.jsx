@@ -4,7 +4,7 @@ import logo from "../assets/LOGOOO.png";
 function Logo() {
   return (
     <div className="flex items-center gap-3 sm:gap-5">
-      <img className="h-10 sm:h-12" src={logo} alt="LOGO" />
+      <img draggable={false} className="h-10 sm:h-12" src={logo} alt="LOGO" />
       <Link
         to="/"
         style={{ fontFamily: "Montserrat, sans-serif" }}

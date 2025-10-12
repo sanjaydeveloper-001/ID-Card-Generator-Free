@@ -17,6 +17,7 @@ function CreatedCard({ proj, setDesign, setMode }) {
     >
       <div className="relative w-full aspect-[3/4] h-50 border rounded-md border-gray-300">
         <img
+          draggable={false}
           src={proj.preview}
           alt="ID preview"
           className="absolute inset-0 w-full h-full object-cover rounded-md"

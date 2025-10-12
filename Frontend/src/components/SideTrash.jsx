@@ -18,6 +18,7 @@ function SideTrash({ trash, setDesign }) {
             >
               <div className="flex items-center gap-2 overflow-hidden w-full">
                 <img
+                  draggable={false}
                   src={proj.profile}
                   alt="Trash item"
                   className="h-8 sm:h-10 aspect-square rounded-xl flex-shrink-0"

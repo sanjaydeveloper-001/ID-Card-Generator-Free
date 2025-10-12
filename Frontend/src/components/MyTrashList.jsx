@@ -55,6 +55,7 @@ function MyTrashList({ trash, setDesign, setMode }) {
               className="w-full min-h-[250px] flex flex-col items-center justify-center text-base sm:text-lg gap-2 px-4 text-center"
             >
               <img
+                draggable={false}
                 src={trashCan}
                 className="w-40 sm:w-48 md:w-56 mb-4 opacity-90"
                 alt="Trash Can"

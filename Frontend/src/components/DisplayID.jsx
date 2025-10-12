@@ -17,7 +17,7 @@ function DisplayID({
   const [saved, setSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [completed, setComplete] = useState(false);
-  const [IDname, setIDname] = useState("Untitled-01");
+  const [IDname, setIDname] = useState("Untitled");
   const lottieRef = useRef();
   const navigate = useNavigate();
 
@@ -49,7 +49,15 @@ function DisplayID({
   }
 
   const HandleShowSave = async () => {
-    if (!user) return navigate("/Login");
+    setFormData((p) => ({
+      ...p,
+      fileName: IDname,
+      createdDate: formattedDate,
+    }));
+    if (!user){
+        localStorage.setItem('tempsaved',formData);
+        return navigate("/Login");
+    }
     setIsSaving(true);
     try {
       await addCreation(formData, token);
@@ -78,7 +86,6 @@ function DisplayID({
       scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent
     "
       >
-        {/* Close & Links */}
         <div className="absolute top-4 right-4 flex gap-4 text-sm">
           <Link to="/" className="text-gray-700 hover:text-blue-500">
             Home
@@ -114,9 +121,9 @@ function DisplayID({
             Your ID is ready. Save or download below:
           </p>
 
-          {/* Responsive Image */}
           <div className="w-full flex justify-center mt-2 mb-6 gap-3 sm:gap-6">
             <img
+              draggable={false}
               src={formData.preview}
               alt="Preview"
               className="
@@ -133,7 +140,6 @@ function DisplayID({
             />
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:justify-center">
             <input
               type="text"
@@ -141,11 +147,6 @@ function DisplayID({
               onChange={(e) => {
                 setIDname(e.target.value);
                 setSaved(false);
-                setFormData((p) => ({
-                  ...p,
-                  fileName: e.target.value,
-                  createdDate: formattedDate,
-                }));
               }}
               className="border border-gray-300  py sm:px-3 py-2 rounded-md w-full sm:w-48 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
             />

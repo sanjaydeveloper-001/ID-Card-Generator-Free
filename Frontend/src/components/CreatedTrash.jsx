@@ -16,6 +16,7 @@ function CreatedTrash({ proj, setDesign, setMode }) {
     >
       <div className="relative w-full aspect-[3/4] h-50 border border-gray-300 rounded-md overflow-hidden">
         <img
+          draggable={false}
           src={proj.preview}
           alt="ID preview"
           className="absolute inset-0 w-full h-full object-cover rounded-md"

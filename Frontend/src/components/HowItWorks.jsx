@@ -11,7 +11,7 @@ function HowItWorks() {
           Thanks to our smart ID generator, you can auto-fetch logos, fill in details, and generate professional ID cards — fast and hassle-free!
         </p>
       </div>
-      <img className="w-[80%] sm:w-[60%] md:w-[45%] lg:w-[30%]" src={howitworks} alt="How It Works" />
+      <img draggable={false} className="w-[80%] sm:w-[60%] md:w-[45%] lg:w-[30%]" src={howitworks} alt="How It Works" />
     </section>
   );
 }

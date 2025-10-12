@@ -19,7 +19,7 @@ function Features() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 w-full">
         {feature.map((list, i) => (
           <div key={i} className="flex flex-col items-center bg-white/70 rounded-2xl p-5 shadow hover:shadow-lg transition">
-            <img className="w-20 mb-4" src={list.img} alt={list.name} />
+            <img draggable={false} className="w-20 mb-4" src={list.img} alt={list.name} />
             <h2 className="underline text-lg font-semibold mb-2">{list.name}</h2>
             <p className="text-gray-700 text-sm sm:text-base">{list.describe}</p>
           </div>
